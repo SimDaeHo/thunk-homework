@@ -7,8 +7,7 @@ import RightMarginBox from "../common/RightMarginBox";
 import "./styles";
 import { StyledDiv } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
-import { v4 as uuidv4 } from "uuid";
-import { addTodo } from "../../modules/todos";
+import { __addTodoThunk } from "../../modules/todos";
 
 /**
  * 컴포넌트 개요 : Todo 메인 페이지에서 제목과 내용을 입력하는 영역
@@ -30,13 +29,9 @@ function Input() {
   const getErrorMsg = (errorCode, params) => {
     switch (errorCode) {
       case "01":
-        return alert(
-          `[필수 입력 값 검증 실패 안내]\n\n제목과 내용은 모두 입력돼야 합니다. 입력값을 확인해주세요.\n입력된 값(제목 : '${params.title}', 내용 : '${params.contents}')`
-        );
+        return alert(`[필수 입력 값 검증 실패 안내]\n\n제목과 내용은 모두 입력돼야 합니다. 입력값을 확인해주세요.\n입력된 값(제목 : '${params.title}', 내용 : '${params.contents}')`);
       case "02":
-        return alert(
-          `[내용 중복 안내]\n\n입력하신 제목('${params.title}')및 내용('${params.contents}')과 일치하는 TODO는 이미 TODO LIST에 등록되어 있습니다.\n기 등록한 TODO ITEM의 수정을 원하시면 해당 아이템의 [상세보기]-[수정]을 이용해주세요.`
-        );
+        return alert(`[내용 중복 안내]\n\n입력하신 제목('${params.title}')및 내용('${params.contents}')과 일치하는 TODO는 이미 TODO LIST에 등록되어 있습니다.\n기 등록한 TODO ITEM의 수정을 원하시면 해당 아이템의 [상세보기]-[수정]을 이용해주세요.`);
       default:
         return `시스템 내부 오류가 발생하였습니다. 고객센터로 연락주세요.`;
     }
@@ -64,26 +59,27 @@ function Input() {
     }
 
     // 이미 존재하는 todo 항목이면 오류
-    const validationArr = todos.filter(
-      (item) => item.title === title && item.contents === contents
-    );
+    // const validationArr = todos.filter(
+    //   (item) => item.title === title && item.contents === contents
+    // );
 
     // "02" : 내용 중복 안내
-    if (validationArr.length > 0) {
-      return getErrorMsg("02", { title, contents });
-    }
+    // if (validationArr.length > 0) {
+    //   return getErrorMsg("02", { title, contents });
+    // }
 
     // 추가하려는 todo를 newTodo라는 객체로 세로 만듦
     const newTodo = {
       title,
       contents,
       isDone: false,
-      id: uuidv4(),
+      // id: uuidv4(),
     };
 
     // todo를 추가하는 reducer 호출
     // 인자 : payload
-    dispatch(addTodo(newTodo));
+    // dispatch(addTodo(newTodo));
+    dispatch(__addTodoThunk(newTodo));
 
     // state 두 개를 초기화
     setTitle("");
@@ -95,21 +91,9 @@ function Input() {
       <form onSubmit={handleSubmitButtonClick}>
         <FlexDiv>
           <RightMarginBox margin={10}>
-            <LabledInput
-              id="title"
-              label="제목"
-              placeholder="제목을 입력해주세요."
-              value={title}
-              onChange={handleTitleChange}
-            />
+            <LabledInput id="title" label="제목" placeholder="제목을 입력해주세요." value={title} onChange={handleTitleChange} />
             <HeightBox height={10} />
-            <LabledInput
-              id="contents"
-              label="내용"
-              placeholder="내용을 입력해주세요."
-              value={contents}
-              onChange={handleContentsChange}
-            />
+            <LabledInput id="contents" label="내용" placeholder="내용을 입력해주세요." value={contents} onChange={handleContentsChange} />
           </RightMarginBox>
           <StyledButton type="submit">제출</StyledButton>
         </FlexDiv>

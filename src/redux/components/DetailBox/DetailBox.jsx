@@ -63,9 +63,7 @@ function DetailBox() {
           <StyledTh>{todo?.isDone ? "완료" : "미완료"}</StyledTh>
         </tr>
       </StyledTable>
-      <StyledButton onClick={handleButtonClick}>
-        이전 페이지로 가기
-      </StyledButton>
+      <StyledButton onClick={handleButtonClick}>이전 페이지로 가기</StyledButton>
     </StyledDiv>
   );
 }
